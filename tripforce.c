@@ -20,6 +20,7 @@
 	#define omp_unset_lock(mutex) ;
 	#define omp_test_lock(mutex) 1
 	#define omp_get_num_procs(void) 1
+	#define omp_get_thread_num(void) 0
 	typedef unsigned char omp_lock_t; /* dummy mutex type */
 #endif
 
@@ -85,7 +86,7 @@ struct _global {
 const struct _global GLOBAL = {
 	.name = "tripforce",
 	.desc = "tripcode bruteforcer for Futaba-style imageboards",
-	.version = "0.2.1",
+	.version = "0.3.0",
 	.author = "Copyright (C) 2016 microsounds <https://github.com/microsounds>",
 	.license = "GNU General Public License v3"
 };
@@ -104,6 +105,9 @@ enum _avg_stats {
 	COUNT_ONLY,
 	FETCH_DATA
 };
+
+/* non-reentrant global PRNG seed */
+unsigned QRAND_SEED;
 
 /* ERROR HANDLING */
 
@@ -211,6 +215,39 @@ int validate_query(const char *query)
 
 /* UTILITIES */
 
+void seed_qrand(unsigned seed)
+{
+	QRAND_SEED = seed;
+}
+
+int qrand(void)
+{
+	/* faster than rand() */
+	QRAND_SEED = (214013 * QRAND_SEED + 2531011);
+	return (QRAND_SEED >> 16) & 0x7FFF;
+}
+
+void seed_qrand_r(unsigned *seeds, unsigned num)
+{
+	/* populate array of reentrant qrand seeds */
+	unsigned i;
+	for (i = 0; i < num; i++)
+	{
+		int random_value = qrand();
+		int j = 0;
+		while (j++ != random_value)
+			qrand(); /* skip qrand() forward by a random amount */
+		seeds[i] = qrand();
+	}
+}
+
+int qrand_r(unsigned *seed)
+{
+	/* reentrant qrand */
+	*seed = (214013 * *seed + 2531011);
+	return (*seed >> 16) & 0x7FFF;
+}
+
 unsigned trip_frequency(enum _avg_stats mode)
 {
 	/* returns average trip hashing rate in trips/sec */
@@ -273,7 +310,7 @@ static const unsigned char SALT_LENGTH = 4;
 static const unsigned char DES_FCRYPT_LENGTH = 14;
 static const unsigned char TRIPCODE_LENGTH = 10;
 
-void generate_password(char *password)
+void generate_password(char *password, unsigned *seed)
 {
 	/* Shift-JIS is a legacy 2-byte encoding, and many *chans tend to strip or
 	   convert the more exotic characters to UTF-8, leading to unpredictable tripcodes */
@@ -287,7 +324,7 @@ void generate_password(char *password)
 			/* '#' triggers secure tripcodes on 4chan.org */
 			/* '~' and '\' don't have 1-byte Shift-JIS equivalents
 			   Passwords with these characters are unreliable. */
-			val = rand() % CHAR_MAX;
+			val = qrand_r(seed) % CHAR_MAX - 2;
 			if (isprint(val) && val != '#' && val != '~' && val != '\\')
 				break;
 		}
@@ -401,11 +438,14 @@ void determine_match(pmode_t mode, char *query, char *trip, char *password, omp_
 
 int main(int argc, char **argv)
 {
-	srand(time(NULL));
 	omp_lock_t io_lock;
 	omp_init_lock(&io_lock); /* forced blocking I/O */
 	const unsigned NUM_CORES = omp_get_num_procs();
 	cli_splash(NUM_CORES);
+
+	seed_qrand(time(NULL)); /* per-thread reentrant PRNG seeds */
+	unsigned qrand_seeds[NUM_CORES];
+	seed_qrand_r(qrand_seeds, NUM_CORES);
 
 	pmode_t mode;
 	if (argc == 1)
@@ -426,14 +466,15 @@ int main(int argc, char **argv)
 	#pragma omp parallel num_threads(NUM_CORES)
 #endif
 	{
+		const unsigned THREAD_ID = omp_get_thread_num();
 		while (1)
 		{
 			/* Intel Core2 Duo P8600 @ 2.401GHz w/ 2 threads
-			   CASE_SENSITIVE: 314.4 kTrips/s
-			   CASE_AGNOSTIC:  308.9 kTrips/s */
+			   CASE_SENSITIVE: 346.4 kTrips/s
+			   CASE_AGNOSTIC:  338.6 kTrips/s */
 			char password[PASSWORD_LENGTH + 1];
 			char salt[SALT_LENGTH + 1];
-			generate_password(password);
+			generate_password(password, &qrand_seeds[THREAD_ID]);
 			generate_salt(password, salt);
 			strip_outliers(salt);
 			replace_punctuation(salt);
