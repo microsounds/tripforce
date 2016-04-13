@@ -39,6 +39,8 @@ At this point, it's worth noting that **case-sensitive** searches are marginally
 #### Can I use this for secure tripcodes?
 Not unless you know the secret salt for the imageboard system you're targeting.
 
+### Installation
+
 ### Building
 ```git clone``` into this repository or grab the latest stable release as a zip or tarball from the [Releases](https://github.com/microsounds/tripforce/releases) tab.
 
@@ -46,6 +48,16 @@ Run ```make``` to build, or ```sudo make install``` if you want to install it to
 ##### Building on OS X
 Apple's official distributions of ```gcc``` and ```clang``` do not support OpenMP.
 Install ```clang-omp``` and ```openssl``` from Homebrew.
+##### Building on Gentoo/Funtoo (via layman)
+```
+layman -o https://paste.installgentoo.com/view/raw/8cb971f3 -f -a gitgud
+layman -s gitgud
+emerge tripforce
+```
+##### Builds for Windows (32-bit)
+* [tripforce-windows-v0.3.0.zip](http://a.pomf.cat/qllvgc.zip)
+  * *SHA1: 80bd55cab5839945836fcd42cb764eb363da69e4*
+
 #### Dependencies
 * ```libssl``` for tripcode hashing using DES, make sure you have it installed before proceeding.
 * ```OpenMP``` (```clang-omp``` on OS X) for multithreading ***(optional)***
