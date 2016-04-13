@@ -39,6 +39,16 @@ At this point, it's worth noting that **case-sensitive** searches are marginally
 #### Can I use this for secure tripcodes?
 Not unless you know the secret salt for the imageboard system you're targeting.
 
+### Installation
+
+#### Gentoo/Funtoo (via layman)
+
+```
+layman -o https://paste.installgentoo.com/view/raw/8cb971f3 -f -a gitgud
+layman -s gitgud
+emerge tripforce
+```
+
 ### Building
 ```git clone``` into this repository or grab the latest stable release as a zip or tarball from the [Releases](https://github.com/microsounds/tripforce/releases) tab.
 
