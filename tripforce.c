@@ -6,8 +6,12 @@
 #include <ctype.h>
 #include <openssl/des.h> /* Requires OpenSSL via libssl or libcrypto */
 
-#ifdef _OPENMP
-	#include <omp.h> /* If OpenMP is not supported, multithreading is disabled */
+#ifdef _OPENMP /* If OpenMP is not supported, multithreading is disabled. */
+#ifdef __APPLE
+	#include <libiomp/omp.h>
+#else
+	#include <omp.h>
+#endif
 #else
 	/* Single-threaded mode: OMP calls replaced with dummy functions */
 	#define omp_init_lock(mutex) ;
@@ -81,7 +85,7 @@ struct _global {
 const struct _global GLOBAL = {
 	.name = "tripforce",
 	.desc = "tripcode bruteforcer for Futaba-style imageboards",
-	.version = "0.2.0",
+	.version = "0.2.1",
 	.author = "Copyright (C) 2016 microsounds <https://github.com/microsounds>",
 	.license = "GNU General Public License v3"
 };

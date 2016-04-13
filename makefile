@@ -11,6 +11,13 @@ INSTALLDIR=/usr/local/bin
 OUTPUT=tripforce
 INPUT=$(wildcard *.c)
 
+# OS X compatibility
+OS_STR=$(shell uname -s)
+ifeq ($(OS_STR), Darwin)
+CC=clang-omp
+LDFLAGS=-lcrypto -lssl -fopenmp -L/usr/local/opt/openssl/lib -I/usr/local/opt/openssl/include
+endif
+
 .PHONY: all install uninstall remove clean profile
 
 all: $(INPUT)
