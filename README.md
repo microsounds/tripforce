@@ -8,8 +8,6 @@ It accomplishes this by generating random *Shift-JIS* compatible password string
 Many other tripcode search programs produce password strings with multi-byte Shift-JIS characters, but some modern imageboard systems have a habit of converting exotic character sets to UTF-8, rendering your passwords useless.
 ```tripforce``` eliminates this ambiguity by limiting the character range to US-ASCII minus ```\``` and ```~```, which have identical code-points in both Shift-JIS and UTF-8.
 
-
-
 ```tripforce``` is primarily meant for generating vanity tripcodes, but you can also use it as a CPU benchmark, because it will make your CPU run **very** hot.
 For optimal speeds, don't run other CPU intensive programs while using ```tripforce```.
 
@@ -55,8 +53,9 @@ layman -s gitgud
 emerge tripforce
 ```
 ##### Builds for Windows (32-bit)
-* [tripforce-windows-v0.3.0.zip](http://a.pomf.cat/qllvgc.zip)
-  * *SHA1: 80bd55cab5839945836fcd42cb764eb363da69e4*
+* [tripforce-windows-v0.3.0.zip]
+(https://github.com/microsounds/tripforce/releases/download/v0.3.0/tripforce-windows-v0.3.0.zip)
+  * SHA1: 80bd55cab5839945836fcd42cb764eb363da69e4
 
 #### Dependencies
 * ```libssl``` for tripcode hashing using DES, make sure you have it installed before proceeding.
