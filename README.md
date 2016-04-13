@@ -73,5 +73,5 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ```
 <sub>keywords: tripcode, imageboard, textboard, 双葉ちゃん, futaba, 2ch, 2chan, yotsuba, 4ch, 4chan</sub>
-[version]: https://img.shields.io/badge/version-v0.2.1-brightgreen.svg?style=flat)
+[version]: https://img.shields.io/badge/version-v0.3.0-brightgreen.svg?style=flat)
 [license]: https://img.shields.io/badge/license-GPLv3-red.svg?style=flat)

@@ -1,3 +1,5 @@
+0.3.0
+	Improved PRNG, yields 10% performance increase. 
 0.2.1
 	Added OS X support.
 0.2.0
