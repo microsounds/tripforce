@@ -106,9 +106,6 @@ enum _avg_stats {
 	FETCH_DATA
 };
 
-/* non-reentrant global PRNG seed */
-unsigned QRAND_SEED;
-
 /* ERROR HANDLING */
 
 #define NUM_OF_ERRORS 4
@@ -213,7 +210,10 @@ int validate_query(const char *query)
 	return 1;
 }
 
-/* UTILITIES */
+/* PRNG */
+
+/* non-reentrant PRNG seed */
+static unsigned QRAND_SEED;
 
 void seed_qrand(unsigned seed)
 {
@@ -233,7 +233,9 @@ void seed_qrand_r(unsigned *seeds, unsigned num)
 	unsigned i;
 	for (i = 0; i < num; i++)
 	{
-		int random_value = qrand();
+		int random_value;
+		while (random_value == 0) /* make sure it actually attempts to randomize */
+			random_value = qrand();
 		int j = 0;
 		while (j++ != random_value)
 			qrand(); /* skip qrand() forward by a random amount */
@@ -247,6 +249,8 @@ int qrand_r(unsigned *seed)
 	*seed = (214013 * *seed + 2531011);
 	return (*seed >> 16) & 0x7FFF;
 }
+
+/* UTILITIES */
 
 unsigned trip_frequency(enum _avg_stats mode)
 {
