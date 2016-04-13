@@ -43,9 +43,10 @@ Not unless you know the secret salt for the imageboard system you're targeting.
 ```git clone``` into this repository or grab the latest stable release as a zip or tarball from the [Releases](https://github.com/microsounds/tripforce/releases) tab 
 
 Run ```make``` to build, or ```sudo make install``` if you want to install it to your system.
+Run ```make osx``` to build on OS X.
 #### Dependencies
 * ```libssl``` for tripcode hashing using DES, make sure you have it installed before proceeding.
-* ```OpenMP``` for multithreading ***(optional)***
+* ```OpenMP``` (```clang-omp``` on OSX) for multithreading ***(optional)***
   * If your compiler or platform doesn't support OpenMP, ```tripforce``` will default to single-threaded mode.
 
 ### Issues

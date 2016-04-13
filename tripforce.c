@@ -7,7 +7,11 @@
 #include <openssl/des.h> /* Requires OpenSSL via libssl or libcrypto */
 
 #ifdef _OPENMP
+#ifdef __APPLE
+	#include <libiomp/omp.h> /* If OpenMP is not supported, multithreading is disabled */
+#else
 	#include <omp.h> /* If OpenMP is not supported, multithreading is disabled */
+#endif
 #else
 	/* Single-threaded mode: OMP calls replaced with dummy functions */
 	#define omp_init_lock(mutex) ;
