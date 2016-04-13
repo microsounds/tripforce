@@ -10,16 +10,18 @@ LDFLAGS=-lcrypto -fopenmp
 INSTALLDIR=/usr/local/bin
 OUTPUT=tripforce
 INPUT=$(wildcard *.c)
-OSXLDFLAGS=-lcrypto -lssl -fopenmp -L/usr/local/opt/openssl/lib -I/usr/local/opt/openssl/include
-CC_OSX=clang-omp
+
+# OS X compatibility
+OS_STR=$(shell uname -s)
+ifeq ($(OS_STR), Darwin)
+CC=clang-omp
+LDFLAGS=-lcrypto -lssl -fopenmp -L/usr/local/opt/openssl/lib -I/usr/local/opt/openssl/include
+endif
 
 .PHONY: all install uninstall remove clean profile
 
 all: $(INPUT)
 	$(CC) $(CFLAGS) -o $(OUTPUT) $(INPUT) $(LDFLAGS)
-
-osx: $(INPUT)
-	$(CC_OSX) $(CFLAGS) -o $(OUTPUT) $(INPUT) $(OSXLDFLAGS)
 
 install: all
 	mv $(OUTPUT) $(INSTALLDIR)

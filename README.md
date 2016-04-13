@@ -40,13 +40,15 @@ At this point, it's worth noting that **case-sensitive** searches are marginally
 Not unless you know the secret salt for the imageboard system you're targeting.
 
 ### Building
-```git clone``` into this repository or grab the latest stable release as a zip or tarball from the [Releases](https://github.com/microsounds/tripforce/releases) tab 
+```git clone``` into this repository or grab the latest stable release as a zip or tarball from the [Releases](https://github.com/microsounds/tripforce/releases) tab.
 
 Run ```make``` to build, or ```sudo make install``` if you want to install it to your system.
-Run ```make osx``` to build on OS X.
+##### Building on OS X
+Apple's official distributions of ```gcc``` and ```clang``` do not support OpenMP.
+Install ```clang-omp``` and ```openssl``` from Homebrew.
 #### Dependencies
 * ```libssl``` for tripcode hashing using DES, make sure you have it installed before proceeding.
-* ```OpenMP``` (```clang-omp``` on OSX) for multithreading ***(optional)***
+* ```OpenMP``` (```clang-omp``` on OS X) for multithreading ***(optional)***
   * If your compiler or platform doesn't support OpenMP, ```tripforce``` will default to single-threaded mode.
 
 ### Issues
@@ -73,4 +75,3 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 <sub>keywords: tripcode, imageboard, textboard, 双葉ちゃん, futaba, 2ch, 2chan, yotsuba, 4ch, 4chan</sub>
 [version]: https://img.shields.io/badge/version-v0.2.0-brightgreen.svg?style=flat)
 [license]: https://img.shields.io/badge/license-GPLv3-red.svg?style=flat)
-
