@@ -233,8 +233,8 @@ void seed_qrand_r(unsigned *seeds, unsigned num)
 	unsigned i;
 	for (i = 0; i < num; i++)
 	{
-		int random_value;
-		while (random_value == 0) /* make sure it actually attempts to randomize */
+		int random_value = 0;
+		while (!random_value) /* make sure it actually attempts to randomize */
 			random_value = qrand();
 		int j = 0;
 		while (j++ != random_value)
