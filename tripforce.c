@@ -267,7 +267,7 @@ unsigned trip_frequency(enum _avg_stats mode)
 		if (current_time != time_at_last_call)
 		{
 			/* floating point divsion runs marginally faster */
-			average = (average + current_tally) / 2.0;
+			average = (average / 2.0) + (current_tally / 2.0);
 			current_tally = 1;
 		}
 		else
