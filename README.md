@@ -53,9 +53,9 @@ layman -s gitgud
 emerge tripforce
 ```
 ##### Builds for Windows (32-bit)
-* [tripforce-windows-v0.3.0.zip]
-(https://github.com/microsounds/tripforce/releases/download/v0.3.0/tripforce-windows-v0.3.0.zip)
-  * SHA1: 80bd55cab5839945836fcd42cb764eb363da69e4
+* [tripforce-windows-v0.3.1.zip]
+(https://github.com/microsounds/tripforce/releases/download/v0.3.1/tripforce-windows-v0.3.1.zip)
+  * SHA1: f5c39c90c36ee1cdea650197fc4badf5c9390469
 
 #### Dependencies
 * ```libssl``` for tripcode hashing using DES, make sure you have it installed before proceeding.
