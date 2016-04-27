@@ -86,7 +86,7 @@ struct _global {
 const struct _global GLOBAL = {
 	.name = "tripforce",
 	.desc = "tripcode bruteforcer for Futaba-style imageboards",
-	.version = "0.3.0",
+	.version = "0.3.1",
 	.author = "Copyright (C) 2016 microsounds <https://github.com/microsounds>",
 	.license = "GNU General Public License v3"
 };
