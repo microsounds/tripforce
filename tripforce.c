@@ -3,7 +3,6 @@
 #include <string.h>
 #include <limits.h>
 #include <time.h>
-#include <ctype.h>
 #include <openssl/des.h> /* Requires OpenSSL via libssl or libcrypto */
 
 #ifdef _OPENMP /* If OpenMP is not supported, multithreading is disabled. */
@@ -86,7 +85,7 @@ struct _global {
 const struct _global GLOBAL = {
 	.name = "tripforce",
 	.desc = "tripcode bruteforcer for Futaba-style imageboards",
-	.version = "0.3.1",
+	.version = "0.3.2",
 	.author = "Copyright (C) 2016 microsounds <https://github.com/microsounds>",
 	.license = "GNU General Public License v3"
 };
@@ -319,23 +318,18 @@ void generate_password(char *password, unsigned *seed)
 	/* Shift-JIS is a legacy 2-byte encoding, and many *chans tend to strip or
 	   convert the more exotic characters to UTF-8, leading to unpredictable tripcodes */
 	/* Creates a Shift-JIS compatible string from the 1-byte SJIS codepage only */
+	static const unsigned char TABLE_SIZE = 92;
+	static const char *lookup =	" !\"$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[]^_`abcdefghijklmnopqrstuvwxyz{|}";
+	/* '#' triggers secure tripcodes on 4chan.org */
+	/* '~' and '\' don't have 1-byte Shift-JIS equivalents */
 	unsigned char i;
 	for (i = 0; i < PASSWORD_LENGTH; i++)
 	{
-		register char val;
-		while (1)
-		{
-			/* '#' triggers secure tripcodes on 4chan.org */
-			/* '~' and '\' don't have 1-byte Shift-JIS equivalents
-			   Passwords with these characters are unreliable. */
-			val = qrand_r(seed) % CHAR_MAX - 2;
-			if (isprint(val) && val != '#' && val != '~' && val != '\\')
-				break;
-		}
-		password[i] = val;
+		password[i] = lookup[qrand_r(seed) % TABLE_SIZE];
 	}
 	password[PASSWORD_LENGTH] = '\0'; /* null terminate */
 }
+
 
 void generate_salt(const char *password, char *salt)
 {
@@ -360,17 +354,14 @@ void strip_outliers(char *salt)
 
 void replace_punctuation(char *salt)
 {
-	static const unsigned char SEARCH_COUNT = 13;
-	static const char *search = ":;<=>?@[\\]^_`";
-	static const char *replace = "ABCDEFGabcdef";
-	unsigned char i, j;
-	for (i = 0; i < SEARCH_COUNT; i++)
+	/* clamp punctuation */
+	unsigned char i;
+	for (i = 0; i < SALT_LENGTH; i++)
 	{
-		for (j = 0; j < SALT_LENGTH; j++)
-		{
-			if (search[i] == salt[j])
-				salt[j] = replace[i];
-		}
+		if (salt[i] >= ':' && salt[i] <= '@') /* if ':;<=>?@' */
+			salt[i] += 0x06; /* shift to 'ABCDEFG' */
+		else if (salt[i] >= '[' && salt[i] <= '`') /* if '[\]^_`' */
+			salt[i] += 0x06; /* shift to 'abcdef' */
 	}
 }
 
@@ -401,7 +392,11 @@ char *strcasestr(const char *haystack, const char *needle)
 		{
 			if (i + len_n <= len_h) /* bounds checking */
 			{
-				if (tolower(haystack[i + j]) == tolower(needle[j]))
+				char h = haystack[i + j];
+				char n = needle[j];
+				h += (h >= 'A' && h <= 'Z') ? 0x20 : 0x00;
+				n += (h >= 'A' && h <= 'Z') ? 0x20 : 0x00;
+				if (h == n)
 					matches++;
 			}
 			else
@@ -474,8 +469,8 @@ int main(int argc, char **argv)
 		while (1)
 		{
 			/* Intel Core2 Duo P8600 @ 2.401GHz w/ 2 threads
-			   CASE_SENSITIVE: 346.4 kTrips/s
-			   CASE_AGNOSTIC:  338.6 kTrips/s */
+			   CASE_SENSITIVE: 353.1 kTrips/s
+			   CASE_AGNOSTIC:  347.3 kTrips/s */
 			char password[PASSWORD_LENGTH + 1];
 			char salt[SALT_LENGTH + 1];
 			generate_password(password, &qrand_seeds[THREAD_ID]);
