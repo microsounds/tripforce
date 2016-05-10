@@ -53,9 +53,9 @@ layman -s gitgud
 emerge tripforce
 ```
 ##### Builds for Windows (32-bit)
-* [tripforce-windows-v0.3.1.zip]
-(https://github.com/microsounds/tripforce/releases/download/v0.3.1/tripforce-windows-v0.3.1.zip)
-  * SHA1: f5c39c90c36ee1cdea650197fc4badf5c9390469
+* [tripforce-windows-v0.3.2.zip]
+(https://github.com/microsounds/tripforce/releases/download/v0.3.2/tripforce-windows-v0.3.2.zip)
+  * SHA1: 7a10f27cfe92a4f2a82e3ba7ce455786f3461ca7
 
 #### Dependencies
 * ```libssl``` for tripcode hashing using DES, make sure you have it installed before proceeding.
@@ -84,5 +84,5 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ```
 <sub>keywords: tripcode, imageboard, textboard, 双葉ちゃん, futaba, 2ch, 2chan, yotsuba, 4ch, 4chan</sub>
-[version]: https://img.shields.io/badge/version-v0.3.1-brightgreen.svg?style=flat)
+[version]: https://img.shields.io/badge/version-v0.3.2-brightgreen.svg?style=flat)
 [license]: https://img.shields.io/badge/license-GPLv3-red.svg?style=flat)
