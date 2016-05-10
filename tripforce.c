@@ -319,7 +319,8 @@ void generate_password(char *password, unsigned *seed)
 	   convert the more exotic characters to UTF-8, leading to unpredictable tripcodes */
 	/* Creates a Shift-JIS compatible string from the 1-byte SJIS codepage only */
 	static const unsigned char TABLE_SIZE = 92;
-	static const char *lookup = " !\"$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[]^_`abcdefghijklmnopqrstuvwxyz{|}";
+	static const char *lookup = " !\"$%&\'()*+,-./0123456789:;<=>?"
+	"@ABCDEFGHIJKLMNOPQRSTUVWXYZ[]^_`abcdefghijklmnopqrstuvwxyz{|}";
 	/* '#' triggers secure tripcodes on 4chan.org */
 	/* '~' and '\' don't have 1-byte Shift-JIS equivalents */
 	unsigned char i;
